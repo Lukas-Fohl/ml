@@ -12,7 +12,7 @@ func main() {
 		panic(err)
 	}
 
-	inputValues := []float64{0.1, 0.5, 0.6, 0.1}
+	inputValues := []float64{0.1, 0.5, 0.6, 0.2}
 
 	output, err := run(n, inputValues)
 	if err != nil {

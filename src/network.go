@@ -19,7 +19,8 @@ type weight struct {
 }
 
 type bias struct {
-	value float64
+	tempValue float64
+	value     float64
 }
 
 type layer struct {
@@ -38,7 +39,7 @@ func setupWeight(input float64) weight {
 }
 
 func setupBias(input float64) bias {
-	return bias{value: input}
+	return bias{value: input, tempValue: 0.0}
 }
 
 func networkBuild(input []int) (network, error) {
@@ -52,7 +53,7 @@ func networkBuild(input []int) (network, error) {
 	n.layers = []layer{}
 
 	rand.Seed(time.Now().UnixNano())
-	defaultBias := bias{value: 0.1 + rand.Float64()*(0.9-0.1)}
+	defaultBias := bias{value: 0.1 + rand.Float64()*(0.9-0.1), tempValue: 0.0}
 	defaultWeight := weight{value: 0.1 + rand.Float64()*(0.9-0.1)}
 	inputLayerSize := input[0]
 	outputLayerSize := input[len(input)-1]
@@ -75,7 +76,7 @@ func networkBuild(input []int) (network, error) {
 	for hiddenIdx := 0; hiddenIdx < hiddenLayerAm; hiddenIdx++ {
 		hiddenBiases := []bias{}
 		for i := 0; i < input[hiddenIdx+1]; i++ {
-			hiddenBiases = append(hiddenBiases, bias{value: 0.1 + rand.Float64()*(0.9-0.1)})
+			hiddenBiases = append(hiddenBiases, bias{value: 0.1 + rand.Float64()*(0.9-0.1), tempValue: 0.0})
 		}
 		hiddenWeightAm := input[hiddenIdx+1] * input[hiddenIdx+2]
 		hiddenWeights := []weight{}
@@ -103,7 +104,7 @@ func run(n network, input []float64) ([]float64, error) {
 	}
 	//fill input:
 	for i := 0; i < len(input); i++ {
-		n.layers[0].biases[i].value = input[i]
+		n.layers[0].biases[i].tempValue = input[i]
 	}
 
 	layerRunAm := len(n.config) - 2
@@ -114,17 +115,16 @@ func run(n network, input []float64) ([]float64, error) {
 			for j := 0; j < len(n.layers[layerIdx-1].biases); j++ {
 				thisBiasAm := len(n.layers[layerIdx].biases)
 				weightIdx := thisBiasAm*j + i
-				sum += n.layers[layerIdx-1].biases[j].value * n.layers[layerIdx-1].weights[weightIdx].value
-				//fmt.Println(weightIdx)
+				sum += (n.layers[layerIdx-1].biases[j].tempValue * n.layers[layerIdx-1].weights[weightIdx].value) - n.layers[layerIdx-1].biases[j].value
 			}
-			n.layers[layerIdx].biases[i].value = sigmoid(float64(sum))
+			n.layers[layerIdx].biases[i].tempValue = sigmoid(float64(sum))
 		}
 		layerIdx++
 	}
 
 	output := []float64{}
 	for i := 0; i < len(n.layers[len(n.config)-1].biases); i++ {
-		output = append(output, n.layers[len(n.config)-1].biases[i].value)
+		output = append(output, n.layers[len(n.config)-1].biases[i].tempValue)
 	}
 
 	return output, nil
