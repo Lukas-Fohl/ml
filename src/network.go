@@ -53,8 +53,8 @@ func networkBuild(input []int) (network, error) {
 	n.layers = []layer{}
 
 	rand.Seed(time.Now().UnixNano())
-	defaultBias := bias{value: 0.1 + rand.Float64()*(0.9-0.1), tempValue: 0.0}
-	defaultWeight := weight{value: 0.1 + rand.Float64()*(0.9-0.1)}
+	defaultBias := bias{value: 0.001 + rand.Float64()*(0.9-0.001), tempValue: 0.0}
+	defaultWeight := weight{value: 0.001 + rand.Float64()*(0.9-0.001)}
 	inputLayerSize := input[0]
 	outputLayerSize := input[len(input)-1]
 	hiddenLayerAm := len(input) - 2
@@ -76,12 +76,12 @@ func networkBuild(input []int) (network, error) {
 	for hiddenIdx := 0; hiddenIdx < hiddenLayerAm; hiddenIdx++ {
 		hiddenBiases := []bias{}
 		for i := 0; i < input[hiddenIdx+1]; i++ {
-			hiddenBiases = append(hiddenBiases, bias{value: 0.1 + rand.Float64()*(0.9-0.1), tempValue: 0.0})
+			hiddenBiases = append(hiddenBiases, bias{value: 0.01 + rand.Float64()*(0.50-0.01), tempValue: 0.0})
 		}
 		hiddenWeightAm := input[hiddenIdx+1] * input[hiddenIdx+2]
 		hiddenWeights := []weight{}
 		for i := 0; i < hiddenWeightAm; i++ {
-			hiddenWeights = append(hiddenWeights, weight{value: 0.1 + rand.Float64()*(0.9-0.1)})
+			hiddenWeights = append(hiddenWeights, weight{value: 0.001 + rand.Float64()*(0.9-0.001)})
 		}
 		hiddenLayer := layer{layerType: hiddenType, biases: hiddenBiases, weights: hiddenWeights}
 		n.layers = append(n.layers, hiddenLayer)

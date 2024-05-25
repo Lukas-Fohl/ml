@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	config := []int{4, 16, 8, 4}
+	config := []int{4, 8, 2}
 
 	var n network
 
@@ -12,7 +12,7 @@ func main() {
 		panic(err)
 	}
 
-	inputValues := []float64{0.1, 0.5, 0.6, 0.2}
+	inputValues := []float64{0.5, 0.5, 0.5, 0.5}
 
 	output, err := run(n, inputValues)
 	if err != nil {
