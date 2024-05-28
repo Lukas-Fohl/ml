@@ -20,5 +20,18 @@ func main() {
 	}
 
 	fmt.Println(output)
+
+	tn := n
+	for i := 0; i < 100000; i++ {
+		tn = training(tn)
+	}
+
+	outputTr, err := run(tn, inputValues)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(outputTr)
+
 	return
 }
