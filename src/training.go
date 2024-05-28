@@ -35,23 +35,26 @@ func getContext() context {
 	tempContext.pointPosX = 0.01 + rand.Float64()*(9.9-0.01)
 	tempContext.pointPosY = 0.01 + rand.Float64()*(9.9-0.01)
 
+	rndBig := 0.6 + rand.Float64()*(0.9-0.6)
+	rndSmall := 0.01 + rand.Float64()*(0.4-0.01)
+
 	if tempContext.playerPosX > tempContext.pointPosX {
-		tempContext.input = append(tempContext.input, 0.5)
-		tempContext.input = append(tempContext.input, 0.0)
+		tempContext.input = append(tempContext.input, rndBig)
+		tempContext.input = append(tempContext.input, rndSmall)
 		tempContext.expOutput = append(tempContext.expOutput, 0.6)
 	} else {
-		tempContext.input = append(tempContext.input, 0.0)
-		tempContext.input = append(tempContext.input, 0.5)
+		tempContext.input = append(tempContext.input, rndSmall)
+		tempContext.input = append(tempContext.input, rndBig)
 		tempContext.expOutput = append(tempContext.expOutput, 0.4)
 	}
 
 	if tempContext.playerPosY > tempContext.pointPosY {
-		tempContext.input = append(tempContext.input, 0.5)
-		tempContext.input = append(tempContext.input, 0.0)
+		tempContext.input = append(tempContext.input, rndBig)
+		tempContext.input = append(tempContext.input, rndSmall)
 		tempContext.expOutput = append(tempContext.expOutput, 0.6)
 	} else {
-		tempContext.input = append(tempContext.input, 0.0)
-		tempContext.input = append(tempContext.input, 0.5)
+		tempContext.input = append(tempContext.input, rndSmall)
+		tempContext.input = append(tempContext.input, rndBig)
 		tempContext.expOutput = append(tempContext.expOutput, 0.4)
 	}
 
@@ -99,7 +102,7 @@ func training(networkIn network) network {
 			networkIn.layers[layerIter].weights[weightIter].value += stepSize
 
 			if costM < ogCost || costP < ogCost {
-				if costM < ogCost {
+				if costM < costP {
 					networkIn.layers[layerIter].weights[weightIter].value -= stepSize
 					continue
 				} else {
@@ -138,7 +141,7 @@ func training(networkIn network) network {
 			networkIn.layers[layerIter].biases[biasIter].value += stepSize
 
 			if costM < ogCost || costP < ogCost {
-				if costM < ogCost {
+				if costM < costP {
 					networkIn.layers[layerIter].biases[biasIter].value -= stepSize
 					continue
 				} else {
